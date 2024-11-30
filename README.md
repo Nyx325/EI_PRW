@@ -26,7 +26,7 @@ en vscode o en una terminal y ejecutaremos
 composer install
 ```
 
-## Desplegar el proyecto sin apache de xampp
+## Desplegar el proyecto sin Apache
 Si no desean hacer uso de apache de xampp para
 ver el proyecto pueden ejecutar
 
