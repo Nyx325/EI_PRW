@@ -1,0 +1,14 @@
+{
+  "name": "rubenor/barbershop",
+  "description": "Pagina web de barberia",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ruben Omar Roman",
+      "email": "rsro220228@upemor.edu.mx"
+    }
+  ],
+  "require-dev": {
+    "ergebnis/php-cs-fixer-config": "6.39"
+  }
+}
