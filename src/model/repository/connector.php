@@ -1,13 +1,13 @@
 <?php
 
-class Database
+class Connector
 {
   private $pdo;
   private static $instance;
 
   private function __construct()
   {
-    $config = include 'config.php';
+    $config = require_once(dirname(__FILE__) ."/../../../config.php");
 
     $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
     try {
