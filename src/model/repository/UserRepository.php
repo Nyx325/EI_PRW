@@ -32,7 +32,7 @@ class UserRepository implements Repository
         $stmt->bindParam(':usr', $data->usr);
         $stmt->bindParam(':pwd', $data->pwd);
         $stmt->bindParam(':type', $data->type);
-        
+
         $stmt->execute();
     }
 
@@ -53,7 +53,7 @@ class UserRepository implements Repository
 
         $stmt = $connection->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        
+
         $stmt->execute();
     }
 
@@ -122,11 +122,35 @@ class UserRepository implements Repository
         $connection = $this->connector->getConnection();
 
         $stmt = $connection->prepare($query);
-        $stmt->bindParam(':id', $data->id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $data->getId(), PDO::PARAM_INT);
         $stmt->bindParam(':usr', $data->usr);
         $stmt->bindParam(':pwd', $data->pwd);
         $stmt->bindParam(':type', $data->type);
-        
+
         $stmt->execute();
+    }
+
+    public function getUser(string $usr, string $pwd): ?User
+    {
+        $query = "SELECT * FROM Users WHERE usr = :usr LIMIT 1";
+        $conn = $this->connector->getConnection();
+        $stmt = $conn->prepare($query);
+
+        // Vincular parámetros
+        $stmt->bindParam(":usr", $usr);
+
+        // Ejecutar la consulta
+        $stmt->execute();
+
+        // Obtener el resultado
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Verificar si se encontró un usuario
+        if ($result && password_verify($pwd, $result['pwd'])) {
+            return User::fromAssocArray($result); // Crear el usuario desde el array
+        }
+
+        // Retornar null si no hay coincidencia
+        return null;
     }
 }

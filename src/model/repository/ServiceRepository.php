@@ -83,7 +83,7 @@ class ServiceRepository implements Repository
 
         $stmt->bindParam(':description', $data->description);
         $stmt->bindParam(':price', $data->price);
-        $stmt->bindParam(':id', $data->id);
+        $stmt->bindParam(':id', $data->getId());
 
         $stmt->execute();
     }
