@@ -7,7 +7,7 @@ class Connector
 
   private function __construct()
   {
-    $config = require_once(dirname(__FILE__) ."/../../../config.php");
+    $config = require_once(dirname(__FILE__) . "/../../../config.php");
 
     $dsn = "mysql:host={$config['host']};dbname={$config['dbname']};charset={$config['charset']}";
     try {
