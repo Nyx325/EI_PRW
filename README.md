@@ -26,6 +26,22 @@ en vscode o en una terminal y ejecutaremos
 composer install
 ```
 
+Tambien se debe configurar las opciones para conectarse
+a la BD en un archivo `config.php` que se debe colocar
+dentro de la carpeta raiz del proyecto
+
+```php
+<?php
+
+return [
+  'host'     => 'localhost',  // Dirección del servidor MySQL
+  'dbname'   => 'barbershop',  // Nombre de la base de datos
+  'user'     => 'rubenor',  // Usuario con permisos para acceder a la base de datos
+  'password' => '',  // Contraseña del usuario
+  'charset'  => 'utf8mb4',  // Conjunto de caracteres recomendado (UTF-8 completo)
+];
+```
+
 ## Desplegar el proyecto sin Apache
 Si no desean hacer uso de apache de xampp para
 ver el proyecto pueden ejecutar
