@@ -1,14 +1,17 @@
 <?php
-abstract class SessionController
+ class SessionController
 {
   private readonly UserRepository $repo;
 
-  public function isLogged(): User
+  public function isLogged(): ?User
   {
     session_start();
 
-    if (is_null($_SESSION['id']) || is_null($_SESSION['usr']) || is_null($_SESSION['type']))
+    if (is_null($_SESSION['id']) || is_null($_SESSION['usr']) || is_null($_SESSION['type'])) {
+      $this->logOut();
+      session_destroy();
       return null;
+    }
 
     return new User($_SESSION['id'], $_SESSION['usr'], "", $_SESSION['type']);
   }
@@ -33,4 +36,3 @@ abstract class SessionController
     session_destroy();
   }
 }
-
