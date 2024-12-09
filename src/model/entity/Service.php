@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/Entity.php");
 
 class Service implements Entity
 {
-  private int $id;
+  public int $id;
   public string $description;
   public float $price;
 

@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/Entity.php");
 
 class Appointment implements Entity
 {
-  private int $id;
+  public int $id;
   public string $date;
   public int $user;
 

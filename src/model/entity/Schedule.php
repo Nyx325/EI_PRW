@@ -1,7 +1,7 @@
 <?php
 class Schedule implements Entity
 {
-  private int $id;
+  public int $id;
   public string $week_day;
   public string $start;
   public string $end;

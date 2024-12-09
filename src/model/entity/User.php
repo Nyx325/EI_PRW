@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/Entity.php");
 
 class User implements Entity
 {
-  private int $id;
+  public int $id;
   public string $usr;
   public string $pwd;
   public string $type;
