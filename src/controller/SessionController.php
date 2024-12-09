@@ -1,5 +1,5 @@
 <?php
-require("../controller/SessionController.php");
+require("../model/repository/UserRepository.php");
 
  class SessionController
 {

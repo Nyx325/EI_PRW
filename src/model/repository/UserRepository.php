@@ -132,25 +132,27 @@ class UserRepository implements Repository
 
   public function getUser(string $usr, string $pwd): ?User
   {
-    $query = "SELECT * FROM Users WHERE usr = :usr LIMIT 1";
-    $conn = $this->connector->getConnection();
-    $stmt = $conn->prepare($query);
-
-    // Vincular parámetros
-    $stmt->bindParam(":usr", $usr);
-
-    // Ejecutar la consulta
-    $stmt->execute();
-
-    // Obtener el resultado
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Verificar si se encontró un usuario
-    if ($result && password_verify($pwd, $result['pwd'])) {
-      return User::fromAssocArray($result); // Crear el usuario desde el array
-    }
-
-    // Retornar null si no hay coincidencia
-    return null;
+      // Consulta SQL con placeholders para usuario y contraseña
+      $query = "SELECT * FROM Users WHERE usr = :usr AND pwd = :pwd LIMIT 1";
+      $conn = $this->connector->getConnection();
+      $stmt = $conn->prepare($query);
+  
+      // Vincular los valores directamente a los placeholders
+      $stmt->bindParam(":usr", $usr, PDO::PARAM_STR);
+      $stmt->bindParam(":pwd", $pwd, PDO::PARAM_STR);
+  
+      // Ejecutar la consulta
+      $stmt->execute();
+  
+      // Obtener el resultado
+      $result = $stmt->fetch(PDO::FETCH_ASSOC);
+  
+      // Verificar si se encontró un usuario
+      if ($result) {
+          return User::fromAssocArray($result); // Crear el usuario desde el array
+      }
+  
+      // Retornar null si no hay coincidencia
+      return null;
   }
 }

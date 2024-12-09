@@ -38,7 +38,7 @@ class AuthRouter
                     $this->auth($reqBody);
                     break;
                 case 'DELETE':
-                    $this->ctrl->logOut();
+                    $this->logOut();
                     break;
 
                 default:
@@ -82,6 +82,13 @@ class AuthRouter
             http_response_code(401);
             echo json_encode(["message" => "Credenciales incorrectas"]);
         }
+    }
+
+    protected function logOut()
+    {
+        $this->ctrl->logOut();
+        http_response_code(200);
+        echo json_encode(["message" => "Cerrando sesión"]);
     }
 }
 

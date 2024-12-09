@@ -1,0 +1,43 @@
+.
+├── barbershop.sql
+├── composer.json
+├── composer.lock
+├── config.php
+├── index.php
+├── README.md
+├── src
+│   ├── controller
+│   │   └── SessionController.php
+│   ├── model
+│   │   ├── entity
+│   │   │   ├── Appointment.php
+│   │   │   ├── Entity.php
+│   │   │   ├── Schedule.php
+│   │   │   ├── Service.php
+│   │   │   └── User.php
+│   │   └── repository
+│   │       ├── AppointmentRepository.php
+│   │       ├── connector.php
+│   │       ├── Repository.php
+│   │       ├── ServiceRepository.php
+│   │       └── UserRepository.php
+│   ├── routes
+│   │   ├── AppointmentRoutes.php
+│   │   ├── AuthRoutes.php
+│   │   ├── Router.php
+│   │   ├── ServiceRoutes.php
+│   │   └── UserRoutes.php
+│   └── view
+├── static
+│   ├── css
+│   ├── html
+│   │   └── login.html
+│   ├── images
+│   └── js
+│       ├── components
+│       │   └── alert.js
+│       └── scripts
+│           └── login.js
+└── xclip
+
+15 directories, 26 files
