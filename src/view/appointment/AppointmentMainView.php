@@ -49,10 +49,16 @@ $appointments = $appointRepo->getAll();
             <td><?php $appointment->date ?></td>
             <td><?php $user->usr ?></td>
             <td>
-              <a href="../controller/DeleteAppointment.php?id=<?php echo $appointment->getId(); ?>"
+              <a href="DeleteAppointment.php?id=<?php echo $appointment->getId(); ?>"
                 onclick="return confirm('¿Estás seguro de eliminar esta cita?');">
                 Eliminar
               </a>
+            </td>
+            <td>
+              <a href="UpdateAppointment.php?id=<?php echo $appointment->getId(); ?>">
+                Modificar
+              </a>
+
             </td>
 
             <td><button type="button">Modificar</button></td>
