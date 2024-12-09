@@ -17,7 +17,7 @@ class AppointmentRepository implements Repository
     if (!($entity instanceof Appointment))
       throw new Exception("\$entity debe ser una cita");
 
-    $query = "INSERT INTO Appointment (appointment_date, user) VALUES (:date, :price)";
+    $query = "INSERT INTO Appointments (appointment_date, user) VALUES (:date, :price)";
     $conn = $this->connector->getConnection();
     $stmt = $conn->prepare($query);
 
@@ -29,7 +29,7 @@ class AppointmentRepository implements Repository
 
   public function delete(int|string $id)
   {
-    $query = "DELETE FROM Appointment WHERE id = :id";
+    $query = "DELETE FROM Appointments WHERE id = :id";
     $conn = $this->connector->getConnection();
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':id', $id);
@@ -38,7 +38,7 @@ class AppointmentRepository implements Repository
 
   public function get(int|string $id): ?Entity
   {
-    $query = "SELECT * FROM Appointment WHERE id = :id";
+    $query = "SELECT * FROM Appointments WHERE id = :id";
     $connection = $this->connector->getConnection();
     $stmt = $connection->prepare($query);
     $stmt->bindParam(':id', $id);
@@ -54,7 +54,7 @@ class AppointmentRepository implements Repository
 
   public function getAll(): array
   {
-    $query = "SELECT * FROM Appointment";
+    $query = "SELECT * FROM Appointments";
     $connection = $this->connector->getConnection();
     $stmt = $connection->prepare($query);
     $stmt->execute();
@@ -75,7 +75,7 @@ class AppointmentRepository implements Repository
       throw new Exception("\$data debe ser un appointment");
     }
 
-    $query = "UPDATE Appointment SET appointment_date = :date, user = :user WHERE id = :id";
+    $query = "UPDATE Appointments SET appointment_date = :date, user = :user WHERE id = :id";
     $connection = $this->connector->getConnection();
     $stmt = $connection->prepare($query);
 
