@@ -1,22 +1,29 @@
 <?php
+require("../controller/SessionController.php");
+
  class SessionController
 {
   private readonly UserRepository $repo;
+
+  public function __construct()
+  {
+    $this->repo = new UserRepository();
+  }
 
   public function isLogged(): ?User
   {
     session_start();
 
-    if (is_null($_SESSION['id']) || is_null($_SESSION['usr']) || is_null($_SESSION['type'])) {
+    if (!isset($_SESSION['id'], $_SESSION['usr'], $_SESSION['type'])){
       $this->logOut();
       session_destroy();
       return null;
     }
 
-    return new User($_SESSION['id'], $_SESSION['usr'], "", $_SESSION['type']);
+    return new User($_SESSION['id'], $_SESSION['usr'], "-", $_SESSION['type']);
   }
 
-  public function sigIn(string $usr, string $pwd): bool
+  public function logIn(string $usr, string $pwd): bool
   {
     $usr = $this->repo->getUser($usr, $pwd);
 
@@ -33,6 +40,7 @@
 
   public function logOut()
   {
+    session_start();
     session_destroy();
   }
 }
