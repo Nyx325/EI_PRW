@@ -21,7 +21,7 @@ class AppointmentRepository implements Repository
     $conn = $this->connector->getConnection();
     $stmt = $conn->prepare($query);
 
-    $stmt->bindParam(':date', $entity->date);
+    $stmt->bindParam(':date', $entity->date->format('Y-m-d H:i:s'));
     $stmt->bindParam(':price', $entity->user);
 
     $stmt->execute();
@@ -79,7 +79,7 @@ class AppointmentRepository implements Repository
     $connection = $this->connector->getConnection();
     $stmt = $connection->prepare($query);
 
-    $stmt->bindParam(':date', $data->date);
+    $stmt->bindParam(':date', $data->date->format('Y-m-d H:i:s'));
     $stmt->bindParam(':user', $data->user);
     $stmt->bindParam(':id', $data->getId());
 

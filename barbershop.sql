@@ -6,7 +6,7 @@ CREATE TABLE Users(
   id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
   usr VARCHAR(16) NOT NULL,
   pwd VARCHAR(16) NOT NULL,
-  type ENUM('employee', 'customer') NOT NULL
+  type ENUM('admin', 'user', 'unknown') NOT NULL
 );
 
 CREATE TABLE Services(
@@ -27,24 +27,23 @@ CREATE TABLE Appointments(
 );
 
 CREATE TABLE Schedules (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NOT NULL,
+  day_of_week ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') PRIMARY KEY,
   start_time TIME NOT NULL,
   end_time TIME NOT NULL
 );
 
 -- Insertar datos en la tabla Users
 INSERT INTO Users (usr, pwd, type) VALUES
-('juan_perez', 'contraseña123', 'customer'),
-('maria_gomez', 'segurapass', 'customer'),
-('lucia_rojas', 'micontraseña', 'customer'),
-('roberto_soto', 'clave_secreta', 'customer'),
-('carlos_fernandez', 'adminclave', 'employee'),
-('ana_blanco', 'trabajopass', 'employee'),
-('miguel_negro', 'barbero123', 'employee'),
-('laura_verde', 'cortepeinado', 'customer'),
-('emma_gris', 'cliente99', 'customer'),
-('daniel_azul', 'trabajoseguro', 'employee');
+('juan_perez', 'contraseña123', 'unknown'),
+('maria_gomez', 'segurapass', 'unknown'),
+('lucia_rojas', 'micontraseña', 'unknown'),
+('roberto_soto', 'clave_secreta', 'admin'),
+('carlos_fernandez', 'adminclave', 'admin'),
+('ana_blanco', 'trabajopass', 'admin'),
+('miguel_negro', 'barbero123', 'user'),
+('laura_verde', 'cortepeinado', 'user'),
+('emma_gris', 'cliente99', 'user'),
+('daniel_azul', 'trabajoseguro', 'user');
 
 -- Insertar datos en la tabla Services
 INSERT INTO Services (description, price) VALUES

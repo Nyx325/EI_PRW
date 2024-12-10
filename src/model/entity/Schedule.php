@@ -3,15 +3,15 @@ class Schedule implements Entity
 {
   public int $id;
   public string $week_day;
-  public string $start;
-  public string $end;
+  public DateTime $startHour;
+  public DateTime $endHour;
 
-  public function __construct(int $id, string $week_day, string $start, string $end)
+  public function __construct(int $id, string $week_day, DateTime $start, DateTime $end)
   {
     $this->id = $id;
     $this->week_day = $week_day;
-    $this->start = $start;
-    $this->end = $end;
+    $this->startHour = $start;
+    $this->endHour = $end;
   }
 
   public static function  fromAssocArray(array $array): Schedule

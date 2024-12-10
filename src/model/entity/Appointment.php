@@ -5,10 +5,10 @@ require_once(dirname(__FILE__) . "/Entity.php");
 class Appointment implements Entity
 {
   public int $id;
-  public string $date;
+  public DateTime $date;
   public int $user;
 
-  public function __construct(int $id, string $date, float $user)
+  public function __construct(int $id, DateTime $date, float $user)
   {
     $this->id = $id;
     $this->date = $date;
@@ -19,7 +19,7 @@ class Appointment implements Entity
   {
     return new Appointment(
       $array["id"],
-      $array["appointment_date"],
+      new DateTime($array["appointment_date"]),
       $array["user"]
     );
   }
