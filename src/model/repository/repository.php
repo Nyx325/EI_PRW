@@ -94,7 +94,7 @@ abstract class SQLRepository implements IRepository
     $conn = $this->connector->getConnection();
     $query = "INSERT INTO " . $this->table . " VALUES " . $this->insertTuple();
     $stmt = $conn->prepare($query);
-    $this->bind($stmt, $data);
+    $this->bindInsert($stmt, $data);
     $stmt->execute();
   }
 
@@ -104,7 +104,7 @@ abstract class SQLRepository implements IRepository
     $query = "UPDATE " . $this->table . " SET " . $this->updateFields() . " WHERE " . $this->idField . " = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(":id", $data->getId());
-    $this->bind($stmt, $data);
+    $this->bindUpdate($stmt, $data);
     $stmt->execute();
   }
 
@@ -217,7 +217,7 @@ abstract class SQLRepository implements IRepository
   protected abstract function updateFields(): string;
 
   /**
-   * Método abstracto para enlazar los valores de la entidad a la consulta SQL.
+   * Método abstracto para enlazar los valores de la entidad a la consulta SQL de insert.
    *
    * Este método debe asociar los valores de la entidad con los placeholders en la consulta SQL
    * usando `$stmt->bindParam()`.
@@ -227,7 +227,20 @@ abstract class SQLRepository implements IRepository
    *
    * @return void
    */
-  protected abstract function bind(PDOStatement $stmt, IEntity $data): void;
+  protected abstract function bindInsert(PDOStatement $stmt, IEntity $data): void;
+
+  /**
+   * Método abstracto para enlazar los valores de la entidad a la consulta SQL de update.
+   *
+   * Este método debe asociar los valores de la entidad con los placeholders en la consulta SQL
+   * usando `$stmt->bindParam()`.
+   *
+   * @param PDOStatement $stmt La declaración SQL preparada.
+   * @param IEntity $data La entidad cuyos valores se van a asociar con los placeholders.
+   *
+   * @return void
+   */
+  protected abstract function bindUpdate(PDOStatement $stmt, IEntity $data): void;
 
   /**
    * Método que instancia el objeto correspondiente a partir de un array asociativo
