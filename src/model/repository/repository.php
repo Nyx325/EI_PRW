@@ -40,7 +40,7 @@ interface IRepository
    *
    * @return IEntity La entidad correspondiente al identificador dado.
    */
-  public function get(int|string $id): IEntity;
+  public function get(int|string $id): ?IEntity;
 
   /**
    * Obtiene un conjunto de entidades filtradas por criterios específicos.
@@ -117,72 +117,84 @@ abstract class SQLRepository implements IRepository
     $stmt->execute();
   }
 
-  public function get(int|string $id): IEntity
+  public function get(int|string $id): ?IEntity
   {
+    // Conexión a la base de datos
     $conn = $this->connector->getConnection();
+
+    // Construir la consulta SQL
     $query = "SELECT * FROM " . $this->table . " WHERE " . $this->idField . " = :id LIMIT 1";
     $stmt = $conn->prepare($query);
+
+    // Enlazar el parámetro `id`
     $stmt->bindParam(":id", $id);
+
+    // Ejecutar la consulta
     $stmt->execute();
 
+    // Obtener el resultado como un array asociativo
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Si no hay resultados, retornar null
     if ($result === false) {
-      throw new Exception("Entity not found.");
+      return null;
     }
 
+    // Si hay un resultado, convertirlo a una entidad usando fromAssocArray
     return $this->fromAssocArray($result);
   }
 
-public function getBy(?IEntityCriteria $criteria): array {
+  public function getBy(?IEntityCriteria $criteria): array
+  {
     // Conexión a la base de datos
     $conn = $this->connector->getConnection();
-    
+
     // Inicializar la consulta base SELECT
     $query = "SELECT * FROM " . $this->table;
-    
+
     // Si se proporciona un criterio (no es null)
     if ($criteria !== null) {
-        // Obtener el array asociativo de campos y valores desde el criterio
-        $fields = $criteria->toAssocArray();
-        
-        // Si hay criterios, construir la cláusula WHERE
-        if (!empty($fields)) {
-            $whereClauses = [];
-            $values = [];
-            
-            // Construir la lista de condiciones WHERE
-            foreach ($fields as $field => $value) {
-                $whereClauses[] = $field . " = :" . $field;
-                $values[":" . $field] = $value;
-            }
-            
-            // Unir todas las condiciones WHERE con 'AND'
-            $query .= " WHERE " . implode(" AND ", $whereClauses);
+      // Obtener el array asociativo de campos y valores desde el criterio
+      $fields = $criteria->toAssocArray();
+
+      // Si hay criterios, construir la cláusula WHERE
+      if (!empty($fields)) {
+        $whereClauses = [];
+        $values = [];
+
+        // Construir la lista de condiciones WHERE
+        foreach ($fields as $field => $value) {
+          $whereClauses[] = $field . " = :" . $field;
+          $values[":" . $field] = $value;
         }
+
+        // Unir todas las condiciones WHERE con 'AND'
+        $query .= " WHERE " . implode(" AND ", $whereClauses);
+      }
     }
 
     // Preparar la consulta SQL
     $stmt = $conn->prepare($query);
-    
+
     // Enlazar los valores
     foreach ($values as $placeholder => $value) {
-        $stmt->bindParam($placeholder, $value);
+      $stmt->bindParam($placeholder, $value);
     }
-    
+
     // Ejecutar la consulta
     $stmt->execute();
-    
+
     // Obtener los resultados como un array asociativo
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Convertir cada fila en un objeto de tipo IEntity usando fromAssocArray
     $entities = [];
     foreach ($results as $row) {
-        $entities[] = $this->fromAssocArray($row);
+      $entities[] = $this->fromAssocArray($row);
     }
 
     return $entities; // Retorna el array de objetos IEntity
-}
+  }
 
   /**
    * Método abstracto para generar la tupla de valores a insertar en la consulta SQL.
