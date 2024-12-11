@@ -1,5 +1,5 @@
 <?php
-require("entity.php");
+require_once("entity.php");
 
 class User implements IEntity
 {

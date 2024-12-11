@@ -1,9 +1,11 @@
 <?php
+require_once("connector.php");
 
 /**
  * Interfaz de repositorio general para manejar las operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
  * sobre las entidades.
  */
+
 interface IRepository
 {
   /**
@@ -132,9 +134,12 @@ abstract class SQLRepository implements IRepository
       $query .= $this->whereParams($criteria);
     }
 
+    error_log(" QUERY: " . $query);
+
     $stmt = $conn->prepare($query);
 
     if ($criteria !== null) {
+      error_log("Bind");
       $this->bindCriteria($stmt, $criteria);
     }
 

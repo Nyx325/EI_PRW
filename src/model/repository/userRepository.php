@@ -1,5 +1,5 @@
 <?php
-require("repository.php");
+require_once("repository.php");
 
 class UserRepository extends SQLRepository
 {
@@ -21,9 +21,9 @@ class UserRepository extends SQLRepository
   protected function bindInsert(PDOStatement $stmt, IEntity $data): void
   {
     $this->validateInstance($data);
-    $stmt->bindParam(":email", $data->email);
-    $stmt->bindParam(":pwd", $data->pwd);
-    $stmt->bindParam(":type", $data->type);
+    $stmt->bindValue(":email", $data->email);
+    $stmt->bindValue(":pwd", $data->pwd);
+    $stmt->bindValue(":type", $data->type);
   }
 
   protected function updateFields(): string
@@ -35,8 +35,8 @@ class UserRepository extends SQLRepository
   {
     if (!$data instanceof User) return;
 
-    $stmt->bindParam(":pwd", $data->pwd);
-    $stmt->bindParam(":type", $data->type);
+    $stmt->bindValue(":pwd", $data->pwd);
+    $stmt->bindValue(":type", $data->type);
   }
 
   protected function fromAssocArray(array $arr): IEntity
@@ -44,7 +44,7 @@ class UserRepository extends SQLRepository
     return new User(
       $arr["email"],
       $arr["pwd"],
-      $arr["type"]
+      $arr["user_type"]
     );
   }
 
@@ -55,7 +55,7 @@ class UserRepository extends SQLRepository
     if (!$criteria instanceof UserCriteria) throw new Exception("\$criteria debe ser de tipo UserCriteria");
 
     if (!is_null($criteria->email)) $params[] = "email LIKE :email";
-    if (!is_null($criteria->type)) $params[] = "type = :type";
+    if (!is_null($criteria->type)) $params[] = "user_type = :type";
 
     if (count($params) > 0) return " WHERE " . implode(" AND ", $params);
 
@@ -68,7 +68,10 @@ class UserRepository extends SQLRepository
       throw new Exception("\$criteria debe ser de tipo UserCriteria");
     }
 
-    $stmt->bindParam(":email", '%' . $criteria->email . "%");
-    $stmt->bindParam(":type", $criteria->type);
+    if (!is_null($criteria->email))
+      $stmt->bindValue(":email", '%' . $criteria->email . "%");
+
+    if (!is_null($criteria->type))
+      $stmt->bindValue(":type", $criteria->type);
   }
 }

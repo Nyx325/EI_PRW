@@ -1,5 +1,5 @@
 <?php
-require("../model/repository/repository.php");
+require_once("../model/repository/repository.php");
 
 abstract class Controller
 {

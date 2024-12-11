@@ -1,7 +1,7 @@
 <?php
-require("controller.php");
-require("../model/repository/userRepository.php");
-require("../model/entity/exception.php");
+require_once("controller.php");
+require_once("../model/repository/userRepository.php");
+require_once("../model/entity/exception.php");
 
 class UserController extends Controller
 {
