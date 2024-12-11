@@ -53,8 +53,7 @@ interface IRepository
 }
 
 /**
- * Clase abstracta para los repositorios que interactúan con la base de datos usando SQL.
- * Implementa métodos generales para agregar, actualizar, eliminar y obtener entidades.
+ * Clase abstracta para interactuar con una base de datos relacional utilizando SQL.
  */
 abstract class SQLRepository implements IRepository
 {
@@ -64,13 +63,14 @@ abstract class SQLRepository implements IRepository
   /** @var string $table Nombre de la tabla en la base de datos */
   protected readonly string $table;
 
-  /** @var string $table Nombre del campo que representa la PRIMARY KEY */
+  /** @var string $idField Nombre del campo que representa la PRIMARY KEY */
   protected readonly string $idField;
 
   /**
    * Constructor de la clase SQLRepository.
    *
    * @param string $table Nombre de la tabla en la base de datos con la que se va a interactuar.
+   * @param string $idField Nombre del campo que actúa como PRIMARY KEY.
    */
   public function __construct(string $table, string $idField)
   {
@@ -79,16 +79,6 @@ abstract class SQLRepository implements IRepository
     $this->connector = Connector::getInstance();
   }
 
-  /**
-   * Agrega una nueva entidad a la base de datos.
-   *
-   * Este método construye una consulta SQL `INSERT INTO` y ejecuta la inserción de los datos
-   * correspondientes a la entidad proporcionada.
-   *
-   * @param IEntity $data La entidad que se va a agregar.
-   *
-   * @return void
-   */
   public function add(IEntity $data): void
   {
     $conn = $this->connector->getConnection();
@@ -111,7 +101,7 @@ abstract class SQLRepository implements IRepository
   public function delete(int|string $id): void
   {
     $conn = $this->connector->getConnection();
-    $query = "DELETE " . $this->table . " WHERE " . $this->idField . " = :id";
+    $query = "DELETE FROM " . $this->table . " WHERE " . $this->idField . " = :id";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(":id", $id);
     $stmt->execute();
@@ -119,133 +109,106 @@ abstract class SQLRepository implements IRepository
 
   public function get(int|string $id): ?IEntity
   {
-    // Conexión a la base de datos
     $conn = $this->connector->getConnection();
-
-    // Construir la consulta SQL
     $query = "SELECT * FROM " . $this->table . " WHERE " . $this->idField . " = :id LIMIT 1";
     $stmt = $conn->prepare($query);
-
-    // Enlazar el parámetro `id`
     $stmt->bindParam(":id", $id);
-
-    // Ejecutar la consulta
     $stmt->execute();
-
-    // Obtener el resultado como un array asociativo
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Si no hay resultados, retornar null
     if ($result === false) {
       return null;
     }
 
-    // Si hay un resultado, convertirlo a una entidad usando fromAssocArray
     return $this->fromAssocArray($result);
   }
 
   public function getBy(?IEntityCriteria $criteria): array
   {
-    // Conexión a la base de datos
     $conn = $this->connector->getConnection();
-
-    // Inicializar la consulta base SELECT
     $query = "SELECT * FROM " . $this->table;
 
-    // Si se proporciona un criterio (no es null)
     if ($criteria !== null) {
-      // Obtener el array asociativo de campos y valores desde el criterio
-      $fields = $criteria->toAssocArray();
-
-      // Si hay criterios, construir la cláusula WHERE
-      if (!empty($fields)) {
-        $whereClauses = [];
-        $values = [];
-
-        // Construir la lista de condiciones WHERE
-        foreach ($fields as $field => $value) {
-          $whereClauses[] = $field . " = :" . $field;
-          $values[":" . $field] = $value;
-        }
-
-        // Unir todas las condiciones WHERE con 'AND'
-        $query .= " WHERE " . implode(" AND ", $whereClauses);
-      }
+      $query .= $this->whereParams($criteria);
     }
 
-    // Preparar la consulta SQL
     $stmt = $conn->prepare($query);
 
-    // Enlazar los valores
-    foreach ($values as $placeholder => $value) {
-      $stmt->bindParam($placeholder, $value);
+    if ($criteria !== null) {
+      $this->bindCriteria($stmt, $criteria);
     }
 
-    // Ejecutar la consulta
     $stmt->execute();
 
-    // Obtener los resultados como un array asociativo
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Convertir cada fila en un objeto de tipo IEntity usando fromAssocArray
     $entities = [];
     foreach ($results as $row) {
       $entities[] = $this->fromAssocArray($row);
     }
 
-    return $entities; // Retorna el array de objetos IEntity
+    return $entities;
   }
 
   /**
-   * Método abstracto para generar la tupla de valores a insertar en la consulta SQL.
+   * Genera una cadena de placeholders para los valores a insertar.
    *
-   * Este método debe devolver un string con los placeholders para los valores de la entidad,
-   * por ejemplo: `(:user, :pwd)` si la entidad tiene propiedades `user` y `pwd`.
-   *
-   * @return string La tupla de placeholders para la inserción (por ejemplo, `(:user, :pwd)`).
+   * @return string Tupla con placeholders (por ejemplo, `(:col1, :col2)`).
    */
   protected abstract function insertTuple(): string;
 
   /**
-   * Método abstracto para generar los valores a actualizar en la consulta SQL.
+   * Genera una cadena de placeholders para los valores a actualizar.
    *
-   * Este método debe devolver un string con los placeholders para los valores de la entidad,
-   * por ejemplo: `usr = :user, pwd = :pwd` si la entidad tiene propiedades `user` y `pwd`.
-   *
-   * @return string La tupla de placeholders para la actualizacion (por ejemplo, `usr = :user, pwd = :pwd`).
+   * @return string Cadena con placeholders (por ejemplo, `col1 = :val1, col2 = :val2`).
    */
   protected abstract function updateFields(): string;
 
   /**
-   * Método abstracto para enlazar los valores de la entidad a la consulta SQL de insert.
+   * Genera una cláusula WHERE basada en los criterios especificados.
    *
-   * Este método debe asociar los valores de la entidad con los placeholders en la consulta SQL
-   * usando `$stmt->bindParam()`.
+   * @param IEntityCriteria $criteria Criterios para filtrar las entidades.
+   *
+   * @return string Cláusula WHERE para la consulta SQL.
+   */
+  protected abstract function whereParams(IEntityCriteria $criteria): string;
+
+  /**
+   * Enlaza los valores de una entidad a una consulta SQL de inserción.
    *
    * @param PDOStatement $stmt La declaración SQL preparada.
-   * @param IEntity $data La entidad cuyos valores se van a asociar con los placeholders.
+   * @param IEntity $data La entidad cuyos valores se enlazarán.
    *
    * @return void
    */
   protected abstract function bindInsert(PDOStatement $stmt, IEntity $data): void;
 
   /**
-   * Método abstracto para enlazar los valores de la entidad a la consulta SQL de update.
-   *
-   * Este método debe asociar los valores de la entidad con los placeholders en la consulta SQL
-   * usando `$stmt->bindParam()`.
+   * Enlaza los valores de una entidad a una consulta SQL de actualización.
    *
    * @param PDOStatement $stmt La declaración SQL preparada.
-   * @param IEntity $data La entidad cuyos valores se van a asociar con los placeholders.
+   * @param IEntity $data La entidad cuyos valores se enlazarán.
    *
    * @return void
    */
   protected abstract function bindUpdate(PDOStatement $stmt, IEntity $data): void;
 
   /**
-   * Método que instancia el objeto correspondiente a partir de un array asociativo
+   * Convierte un array asociativo en una instancia de entidad.
    *
-   * @return IEntity El objeto instanciado a partir de la consulta SQL
+   * @param array $arr Datos en forma de array asociativo.
+   *
+   * @return IEntity La entidad instanciada a partir de los datos.
    */
   protected abstract function fromAssocArray(array $arr): IEntity;
+
+  /**
+   * Enlaza los valores de los criterios a la consulta SQL.
+   *
+   * @param PDOStatement $stmt La declaración SQL preparada.
+   * @param IEntityCriteria $criteria Los criterios cuyos valores se enlazarán.
+   *
+   * @return void
+   */
+  protected abstract function bindCriteria(PDOStatement $stmt, IEntityCriteria $criteria): void;
 }

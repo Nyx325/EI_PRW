@@ -23,13 +23,11 @@ class User implements IEntity
 class UserCriteria implements IEntityCriteria
 {
   public ?string $email;
-  public ?string $pwd;
   public ?string $type;
 
-  public function __construct(?string $email, ?string $pwd, ?string $type)
+  public function __construct(?string $email, ?string $type)
   {
     $this->email = $email;
-    $this->pwd = $pwd;
     $this->type = $type;
   }
 
@@ -40,9 +38,7 @@ class UserCriteria implements IEntityCriteria
     if ($this->email !== null) {
       $assocArray['email'] = $this->email;
     }
-    if ($this->pwd !== null) {
-      $assocArray['pwd'] = $this->pwd;
-    }
+
     if ($this->type !== null) {
       $assocArray['type'] = $this->type;
     }
