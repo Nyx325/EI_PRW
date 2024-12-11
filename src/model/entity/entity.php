@@ -22,23 +22,10 @@ interface IEntity
 }
 
 /**
- * Interfaz que define el comportamiento de un criterio de búsqueda para una entidad.
+ * Interfaz que define un criterio de búsqueda para una entidad.
  * 
  * Un criterio de búsqueda es un conjunto de condiciones que se utilizan para filtrar los resultados
  * al obtener entidades de la base de datos. El objetivo de esta interfaz es proporcionar una forma estandarizada
  * de convertir los criterios de búsqueda en un array asociativo de condiciones para su uso en consultas SQL.
  */
-interface IEntityCriteria
-{
-  /**
-   * Devuelve un array asociativo de los campos que no son nulos en el criterio de búsqueda.
-   *
-   * Este método debe recorrer las propiedades del criterio de búsqueda y devolver un array donde las claves
-   * son los nombres de los campos (por ejemplo, `campo = valor`), y los valores son los valores de los campos.
-   * Solo deben incluirse en el array aquellos campos cuya propiedad no sea nula. Este array se puede utilizar
-   * para generar condiciones en una consulta SQL, por ejemplo, en una cláusula `WHERE`.
-   *
-   * @return array Un array asociativo campo => valor con los campos no nulos del criterio de búsqueda.
-   */
-  public function toAssocArray(): array;
-}
+interface IEntityCriteria {}

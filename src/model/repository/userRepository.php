@@ -28,13 +28,12 @@ class UserRepository extends SQLRepository
 
   protected function updateFields(): string
   {
-    return "pwd = :pwd, type = :type";
+    return "pwd = :pwd, user_type = :type";
   }
 
   protected function bindUpdate(PDOStatement $stmt, IEntity $data): void
   {
-    if (!$data instanceof User) return;
-
+    $this->validateInstance($data);
     $stmt->bindValue(":pwd", $data->pwd);
     $stmt->bindValue(":type", $data->type);
   }

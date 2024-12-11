@@ -30,19 +30,4 @@ class UserCriteria implements IEntityCriteria
     $this->email = $email;
     $this->type = $type;
   }
-
-  public function toAssocArray(): array
-  {
-    $assocArray = [];
-
-    if ($this->email !== null) {
-      $assocArray['email'] = $this->email;
-    }
-
-    if ($this->type !== null) {
-      $assocArray['type'] = $this->type;
-    }
-
-    return $assocArray;
-  }
 }
