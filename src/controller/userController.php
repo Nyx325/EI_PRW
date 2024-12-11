@@ -16,8 +16,11 @@ class UserController extends Controller
       throw new UserVisibleException("\$data debe ser de tipo User");
 
     $msg = [];
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $data->email))
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $data->email)) {
       $msg[] = "formato email inválido se espera: usuario@dominio";
+    } else if (!is_null($this->repo->get($data->email))) {
+      $msg[] = "ya hay una cuenta con ese email";
+    }
 
     if (!preg_match('/^(ADMIN|CLIENT)$/', $data->type))
       $msg[] = "tipo usuario inválido se espera: CLIENT o ADMIN";

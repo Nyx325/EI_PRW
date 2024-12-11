@@ -66,7 +66,7 @@ class ServiceRepository extends SQLRepository
       throw new Exception("\$criteria debe ser de tipo ServiceCriteria");
 
     if (!is_null($criteria->description))
-      $stmt->bindValue(":desc", $criteria->description);
+      $stmt->bindValue(":desc", '%' . $criteria->description . '%');
 
     if (!is_null($criteria->price))
       $stmt->bindValue(":price", $criteria->price);

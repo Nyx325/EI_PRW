@@ -98,7 +98,7 @@ abstract class Routes
         echo json_encode($entity);
       } else {
         http_response_code(404);
-        echo json_encode(["error" => $this->entityName . " no encontrada"]);
+        echo json_encode(["error" => $this->entityName . " no encontrado"]);
       }
     } else {
       $criteria = $this->criteriaFromParams($_GET);

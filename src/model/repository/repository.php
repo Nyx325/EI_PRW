@@ -134,14 +134,11 @@ abstract class SQLRepository implements IRepository
       $query .= $this->whereParams($criteria);
     }
 
-    error_log(" QUERY: " . $query);
-
     $stmt = $conn->prepare($query);
 
-    if ($criteria !== null) {
-      error_log("Bind");
+    if ($criteria !== null)
       $this->bindCriteria($stmt, $criteria);
-    }
+
 
     $stmt->execute();
 
