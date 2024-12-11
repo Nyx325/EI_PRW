@@ -32,6 +32,9 @@ class ServiceRepository extends SQLRepository
   {
     if (!$data instanceof Service)
       throw new Exception("\$data debe ser un tipo Service");
+
+    $stmt->bindValue(":desc", $data->description);
+    $stmt->bindValue(":price", $data->price);
   }
 
   protected function fromAssocArray(array $arr): IEntity
@@ -53,7 +56,7 @@ class ServiceRepository extends SQLRepository
       $params[] = "description LIKE :desc";
 
     if (!is_null($criteria->price))
-      $params[] = "price = :price";
+      $params[] = "price LIKE :price";
 
     if (count($params) > 0) return " WHERE " . implode(" AND ", $params);
 
@@ -69,6 +72,6 @@ class ServiceRepository extends SQLRepository
       $stmt->bindValue(":desc", '%' . $criteria->description . '%');
 
     if (!is_null($criteria->price))
-      $stmt->bindValue(":price", $criteria->price);
+      $stmt->bindValue(":price", '%' . $criteria->price . "%");
   }
 }

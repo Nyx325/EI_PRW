@@ -95,7 +95,7 @@ abstract class SQLRepository implements IRepository
     $conn = $this->connector->getConnection();
     $query = "UPDATE " . $this->table . " SET " . $this->updateFields() . " WHERE " . $this->idField . " = :id";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(":id", $data->getId());
+    $stmt->bindValue(":id", $data->getId());
     $this->bindUpdate($stmt, $data);
     $stmt->execute();
   }
@@ -105,7 +105,7 @@ abstract class SQLRepository implements IRepository
     $conn = $this->connector->getConnection();
     $query = "DELETE FROM " . $this->table . " WHERE " . $this->idField . " = :id";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(":id", $id);
+    $stmt->bindValue(":id", $id);
     $stmt->execute();
   }
 
@@ -114,7 +114,7 @@ abstract class SQLRepository implements IRepository
     $conn = $this->connector->getConnection();
     $query = "SELECT * FROM " . $this->table . " WHERE " . $this->idField . " = :id LIMIT 1";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(":id", $id);
+    $stmt->bindValue(":id", $id);
     $stmt->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 

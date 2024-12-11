@@ -13,7 +13,7 @@ class UserController extends Controller
   protected function validateAdd(IEntity $data)
   {
     if (!$data instanceof User)
-      throw new UserVisibleException("\$data debe ser de tipo User");
+      throw new Exception("\$data debe ser de tipo User");
 
     $msg = [];
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $data->email)) {
@@ -32,7 +32,7 @@ class UserController extends Controller
   protected function validateUpdate(IEntity $data)
   {
     if (!$data instanceof User)
-      throw new UserVisibleException("\$data debe ser de tipo User");
+      throw new Exception("\$data debe ser de tipo User");
 
     if (is_null($this->repo->get($data->email)))
       throw new UserVisibleException("No se encontró el usuario");
@@ -50,6 +50,6 @@ class UserController extends Controller
   protected function validateSearch(IEntityCriteria $criteria)
   {
     if (!$criteria instanceof UserCriteria)
-      throw new UserVisibleException("\$criteria debe ser de tipo UserCriteria");
+      throw new Exception("\$criteria debe ser de tipo UserCriteria");
   }
 }
