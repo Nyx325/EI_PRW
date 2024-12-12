@@ -26,7 +26,7 @@ class AppointmentRepository extends SQLRepository
 
   protected function updateFields(): string
   {
-    return "folio = :f, phone = :p, appointment_date = :d, email = :e";
+    return "phone = :p, appointment_date = :d, email = :e";
   }
 
   protected function bindUpdate(PDOStatement $stmt, IEntity $data): void
@@ -34,7 +34,6 @@ class AppointmentRepository extends SQLRepository
     if (!$data instanceof Appointment)
       throw new Exception("\$data debe ser de tipo Appointment");
 
-    $stmt->bindValue(":f", $data->folio);
     $stmt->bindValue(":p", $data->phone);
     $stmt->bindValue(":d", $data->date);
     $stmt->bindValue(":e", $data->email);
