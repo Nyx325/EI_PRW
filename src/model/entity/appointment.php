@@ -1,10 +1,12 @@
 <?php
+require_once("entity.php");
+
 class Appointment implements IEntity
 {
-  private readonly int $folio;
-  private string $phone;
-  private string $date;
-  private string $email;
+  public readonly int $folio;
+  public string $phone;
+  public string $date;
+  public string $email;
 
   public function __construct(int $folio, string $phone, string $date, string $email)
   {
@@ -22,9 +24,9 @@ class Appointment implements IEntity
 
 class AppointmentCriteria implements IEntityCriteria
 {
-  private ?string $phone;
-  private ?string $date;
-  private ?string $email;
+  public ?string $phone;
+  public ?string $date;
+  public ?string $email;
 
   public function __construct(?string $phone = null, ?string $date = null, ?string $email = null)
   {
