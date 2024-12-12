@@ -1,7 +1,12 @@
 <?php
 require_once("repository.php");
 
-class UserRepository extends SQLRepository
+interface IUserRepository extends IRepository
+{
+  public function find(string $email, string $pwd): IEntity;
+}
+
+class UserRepository extends SQLRepository implements IUserRepository
 {
   public function __construct()
   {
@@ -72,5 +77,23 @@ class UserRepository extends SQLRepository
 
     if (!is_null($criteria->type))
       $stmt->bindValue(":type", $criteria->type);
+  }
+
+  public function find(string $email, string $pwd): IEntity
+  {
+    $conn = $this->connector->getConnection();
+    $query = "SELECT * FROM " . $this->table . " WHERE email = :email AND pwd = :pwd";
+    $stmt = $conn->prepare($query);
+    $stmt->bindValue(":email", $email);
+    $stmt->bindValue(":pwd", $pwd);
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result === false) {
+      return null;
+    }
+
+    return $this->fromAssocArray($result);
   }
 }
