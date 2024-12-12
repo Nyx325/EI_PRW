@@ -34,9 +34,9 @@ CREATE TABLE Appointment (
 
 -- Tabla de detalles de cita
 CREATE TABLE AppointmentDetail (
+    id INT PRIMARY KEY AUTO_INCREMENT,
     folio INT, -- FK con Appointment
     service_id INT, -- FK con Service
-    PRIMARY KEY (folio, service_id),  -- Clave primaria compuesta
     FOREIGN KEY (folio) REFERENCES Appointment(folio) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (service_id) REFERENCES Service(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -87,19 +87,19 @@ INSERT INTO Appointment (phone, appointment_date, email) VALUES
 ('555-3344', '2024-12-07 13:00:00', 'emma_gris@correo.com'),
 ('555-4455', '2024-12-08 13:30:00', 'daniel_azul@correo.com');
 
-INSERT INTO AppointmentDetail (folio, service_id) VALUES
-(1, 1),  -- Juan Perez, Corte de cabello
-(1, 2),  -- Juan Perez, Afeitado
-(2, 3),  -- Maria Gomez, Corte y afeitado
-(2, 4),  -- Maria Gomez, Recorte de barba
-(3, 1),  -- Lucia Rojas, Corte de cabello
-(3, 5),  -- Lucia Rojas, Tinte para cabello
-(4, 6),  -- Roberto Soto, Corte infantil
-(5, 7),  -- Carlos Fernandez, Tratamiento capilar
-(6, 8),  -- Ana Blanco, Masaje capilar
-(7, 9),  -- Miguel Negro, Arreglo masculino
-(8, 10), -- Laura Verde, Peinado femenino
-(9, 1),  -- Emma Gris, Corte de cabello
-(9, 3),  -- Emma Gris, Corte y afeitado
-(10, 4), -- Daniel Azul, Recorte de barba
-(10, 2); -- Daniel Azul, Afeitado
+INSERT INTO AppointmentDetail (id, folio, service_id) VALUES
+(0 ,1, 1),  -- Juan Perez, Corte de cabello
+(0 ,1, 2),  -- Juan Perez, Afeitado
+(0 ,2, 3),  -- Maria Gomez, Corte y afeitado
+(0 ,2, 4),  -- Maria Gomez, Recorte de barba
+(0 ,3, 1),  -- Lucia Rojas, Corte de cabello
+(0 ,3, 5),  -- Lucia Rojas, Tinte para cabello
+(0 ,4, 6),  -- Roberto Soto, Corte infantil
+(0 ,5, 7),  -- Carlos Fernandez, Tratamiento capilar
+(0 ,6, 8),  -- Ana Blanco, Masaje capilar
+(0 ,7, 9),  -- Miguel Negro, Arreglo masculino
+(0 ,8, 10), -- Laura Verde, Peinado femenino
+(0 ,9, 1),  -- Emma Gris, Corte de cabello
+(0 ,9, 3),  -- Emma Gris, Corte y afeitado
+(0 ,10, 4), -- Daniel Azul, Recorte de barba
+(0 ,10, 2); -- Daniel Azul, Afeitado

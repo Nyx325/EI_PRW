@@ -10,10 +10,10 @@ abstract class Controller
     $this->repo = $repo;
   }
 
-  public function add(IEntity $data): void
+  public function add(IEntity $data): IEntity
   {
     $this->validateAdd($data);
-    $this->repo->add($data);
+    return $this->repo->add($data);
   }
 
   public function update(IEntity $data): void

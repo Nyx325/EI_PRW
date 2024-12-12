@@ -55,7 +55,8 @@ abstract class Routes
 
         case 'POST':
           $data = $this->addDataFromBody($reqBody);
-          $this->ctrl->add($data);
+          $item = $this->ctrl->add($data);
+          echo json_encode($item);
           break;
 
         case 'PUT':

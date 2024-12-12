@@ -13,9 +13,9 @@ interface IRepository
    *
    * @param IEntity $data La entidad que se va a agregar.
    *
-   * @return void
+   * @return IEntity el registro creado
    */
-  public function add(IEntity $data): void;
+  public function add(IEntity $data): IEntity;
 
   /**
    * Actualiza una entidad existente en la base de datos.
@@ -81,13 +81,28 @@ abstract class SQLRepository implements IRepository
     $this->connector = Connector::getInstance();
   }
 
-  public function add(IEntity $data): void
+  public function add(IEntity $data): IEntity
   {
     $conn = $this->connector->getConnection();
     $query = "INSERT INTO " . $this->table . " VALUES " . $this->insertTuple();
     $stmt = $conn->prepare($query);
     $this->bindInsert($stmt, $data);
     $stmt->execute();
+
+    // Obtener el ID generado automáticamente (si aplica)
+    $lastInsertId = $conn->lastInsertId();
+
+    // Si la tabla tiene una clave primaria no autoincremental, podrías extraer el ID directamente desde $data
+    $primaryKeyValue = $lastInsertId ?: $data->getId();
+
+    // Consultar la entidad recién insertada
+    $newEntity = $this->get($primaryKeyValue);
+
+    if ($newEntity === null) {
+      throw new RuntimeException("Error al recuperar la entidad recién insertada.");
+    }
+
+    return $newEntity;
   }
 
   public function update(IEntity $data): void
