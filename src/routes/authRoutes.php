@@ -57,7 +57,7 @@ class AuthRoutes
     $usr = $this->ctrl->isLogged();
     if (is_null($usr)) {
       http_response_code(401);
-      echo json_encode(["error" => "No autenticado. Por favor iniciar sesión"]);
+      echo json_encode(["message" => "No autenticado. Por favor iniciar sesión"]);
       return;
     }
 

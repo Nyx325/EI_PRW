@@ -3,7 +3,7 @@ require_once("repository.php");
 
 interface IUserRepository extends IRepository
 {
-  public function find(string $email, string $pwd): IEntity;
+  public function find(string $email, string $pwd): ?IEntity;
 }
 
 class UserRepository extends SQLRepository implements IUserRepository
@@ -79,7 +79,7 @@ class UserRepository extends SQLRepository implements IUserRepository
       $stmt->bindValue(":type", $criteria->type);
   }
 
-  public function find(string $email, string $pwd): IEntity
+  public function find(string $email, string $pwd): ?IEntity
   {
     $conn = $this->connector->getConnection();
     $query = "SELECT * FROM " . $this->table . " WHERE email = :email AND pwd = :pwd";

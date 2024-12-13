@@ -1,35 +1,37 @@
 import Alert from "../components/alert.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+  const host = document.location.host;
+  const authRoute = `http://${host}/src/routes/authRoutes.php`;
   const alert = new Alert("alert");
+  const btn = document.getElementById("login-btn");
   const usrI = document.getElementById("usr-input");
   const pwdI = document.getElementById("pwd-input");
-  const form = document.getElementById("login-form");
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const usr = usrI.value.trim();
+  btn.addEventListener("click", async () => {
+    const email = usrI.value.trim();
     const pwd = pwdI.value.trim();
 
-    const { hostname, port } = document.location;
-    const url = `http://${hostname}:${port}/src/routes/AuthRoutes.php`;
-
-    const response = await fetch(url, {
+    const auth = await fetch(authRoute, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ usr, pwd }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        pwd,
+      }),
     });
 
-    if (response.status >= 400) {
-      const res = await response.json();
-      alert.setMessage(res.message);
+    if (auth.status === 401) {
+      const e = await auth.json();
+      alert.setMessage(e.error);
       alert.setVisible(true);
+      return;
+    } else if (!auth.ok) {
+      console.error("Error al consultar ", authRoute);
       return;
     }
 
-      alert.setVisible(false);
+    alert.setVisible(false);
+    window.location.replace(`http://${host}/index.html`);
   });
 });
